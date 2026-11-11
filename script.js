@@ -37,12 +37,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 3. Contact Form Submission ---
+    // --- 3. Contact Form Submission (Formspree AJAX) ---
     const contactForm = document.getElementById('contactForm');
     
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault(); 
-        alert('Thank you, Simon will get back to you soon! (This is a demo)');
-        contactForm.reset();
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevents page reload
+        
+        const formData = new FormData(contactForm);
+        
+        try {
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert('Thank you! Your message has been sent successfully.');
+                contactForm.reset();
+            } else {
+                alert('Oops! There was a problem submitting your form.');
+            }
+        } catch (error) {
+            alert('Error connecting to the server. Please try again later.');
+        }
     });
 });
